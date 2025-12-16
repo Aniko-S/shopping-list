@@ -19,36 +19,39 @@ function SignUp() {
 
   return (
     <>
-      <form onSubmit={signUp}>
-        <div className="form-group">
-          <label>Felhasználónév</label>
-          <input
-            type="text"
-            onChange={(e) => setUserName(e.target.value)}
-            className="form-control"
-          ></input>
-        </div>
-        <div className="form-group">
-          <label>Email-cím</label>
-          <input
-            type="email"
-            onChange={(e) => setEmail(e.target.value)}
-            className="form-control"
-          ></input>
-        </div>
-        <div className="form-group">
-          <label>Jelszó</label>
-          <input
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            className="form-control"
-          ></input>
-        </div>
+      <div className="box small">
+        <h1 className="pb-5">Regisztráció</h1>
+        <form onSubmit={signUp}>
+          <div className="form-group">
+            <label>Felhasználónév</label>
+            <input
+              type="text"
+              onChange={(e) => setUserName(e.target.value)}
+              className="form-control"
+            ></input>
+          </div>
+          <div className="form-group">
+            <label>Email-cím</label>
+            <input
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-control"
+            ></input>
+          </div>
+          <div className="form-group">
+            <label>Jelszó</label>
+            <input
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-control"
+            ></input>
+          </div>
 
-        <button type="submit" className="btn btn-primary">
-          Regisztráció
-        </button>
-      </form>
+          <button type="submit" className="btn btn-success">
+            Regisztráció
+          </button>
+        </form>
+      </div>
     </>
   );
 }

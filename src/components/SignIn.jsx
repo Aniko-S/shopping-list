@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { auth } from "../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate, Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { AuthContext } from "../store/AuthContext";
 
 function SignIn() {
+  const { isUserLoggedIn } = useContext(AuthContext);
+
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [isSigninIn, setIsSigningIn] = useState(false);
-
-  const navigate = useNavigate();
 
   const signIn = (e) => {
     e.preventDefault();
@@ -16,14 +17,17 @@ function SignIn() {
       setIsSigningIn(true);
 
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredentials) => navigate("/home"))
+        .then((userCredentials) => {})
         .catch((error) => console.log(error));
     }
   };
 
   return (
     <>
-      <div className="shadow p-5">
+      {isUserLoggedIn && <Navigate to="/home"></Navigate>}
+      <div className="box samll">
+        <h1 className="pb-5">Bejelentkezés</h1>
+
         <form onSubmit={signIn}>
           <div className="form-group">
             <label>Email-cím</label>
@@ -42,12 +46,14 @@ function SignIn() {
             ></input>
           </div>
 
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-success">
             Belépés
           </button>
         </form>
-        <div>Még nincs fiókja?</div>
-        <Link to="/signup">Regisztráció</Link>
+
+        <div className="p-5">
+          <div>Még nincs fiókja?</div>
+        </div>
       </div>
     </>
   );
