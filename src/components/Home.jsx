@@ -1,25 +1,40 @@
-import { db } from "../config/firebase";
-import { collection, getDocs } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { signOut } from "firebase/auth";
+import { auth, db } from "../config/firebase";
+import { collection, addDoc, query, onSnapshot } from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../store/AuthContext";
 
 function Home() {
   const [productList, setProductList] = useState([]);
+  const [newProduct, setNewProduct] = useState("");
+  const { user } = useContext(AuthContext);
 
-  const docRef = collection(db, "product_list");
+  const collectionRef = collection(db, `shopping_list/${user?.uid}/items`);
 
   useEffect(() => {
-    loadProductList();
-  }, []);
+    const q = query(collectionRef);
+    const getDataUnsub = onSnapshot(
+      q,
+      (snapShot) => {
+        const data = snapShot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
 
-  const loadProductList = async () => {
+        setProductList(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    return () => getDataUnsub();
+  }, [user]);
+
+  const addProduct = async () => {
     try {
-      const docSnap = await getDocs(docRef);
-      const data = docSnap.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      setProductList(data);
+      await addDoc(collectionRef, { name: newProduct });
+      setNewProduct("");
     } catch (error) {
       console.log(error);
     }
@@ -27,12 +42,23 @@ function Home() {
 
   return (
     <>
-      <h1>Bevásárlólista</h1>
-      <div>
-        {productList.map((item) => {
-          return <div key={item.id}>{item.name}</div>;
-        })}
+      <div className="box letter">
+        <h1>Bevásárlólista</h1>
+        <input
+          type="text"
+          onChange={(e) => setNewProduct(e.target.value)}
+          placeholder="Új tétel"
+        ></input>
+        <button onClick={addProduct}>Hozzáadás</button>
+        <div>
+          {productList.map((item) => {
+            return <div key={item.id}>{item.name}</div>;
+          })}
+        </div>
       </div>
+      <Link to="/">
+        <button onClick={() => signOut(auth)}>Kilépés</button>
+      </Link>
     </>
   );
 }

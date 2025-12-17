@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from "react";
 import { auth } from "../config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
-export const AuthContext = createContext({ isUserLoggedIn: false });
+export const AuthContext = createContext({ isUserLoggedIn: false, user: null });
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState();
@@ -27,7 +27,6 @@ export const AuthContextProvider = ({ children }) => {
   const ctxValue = {
     user,
     isUserLoggedIn,
-    setUser,
   };
 
   return <AuthContext value={ctxValue}>{children}</AuthContext>;
