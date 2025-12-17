@@ -13,3 +13,7 @@
   width: 800px;
   height: 90vh;
 }
+
+.checked {
+  text-decoration: line-through;
+}
